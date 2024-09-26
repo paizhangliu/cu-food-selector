@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>C-U Food Selector</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+        .input-section {
+            margin-bottom: 20px;
+        }
+        textarea {
+            width: 100%;
+            height: 80px;
+        }
+        label {
+            display: block;
+            margin-bottom: 10px;
+        }
+        .result {
+            margin-top: 20px;
+            font-size: 1.2em;
+            color: green;
+        }
+        button {
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>C-U Food Selector</h1>
+    <div class="input-section">
+        <label>
+            <input type="checkbox" id="low-price" checked> Diner
+        </label>
+        <textarea id="low-price-options" placeholder="Please put restaurants here, separated by comma"></textarea>
+    </div>
+
+    <div class="input-section">
+        <label>
+            <input type="checkbox" id="high-price" checked> Fine dining
+        </label>
+        <textarea id="high-price-options" placeholder="Please put restaurants here, separated by comma"></textarea>
+    </div>
+
+    <button onclick="randomFood()">Go</button>
+    <button onclick="clearResult()">Clear</button>
+
+    <div class="result" id="result">Where are we going?</div>
+
+    <script>
+        const presetRestaurants = {
+			low: ["San Maru", "Farrens", "DQ", "Taco bell", "Raising Cane's", "Sticky Rice", "蒲月巷", "伊面园", "EVO", "GG Bowl", "OOZU", "十秒米线"],
+            high: ["Texas Roadhouse", "Blackdog", "北味轩", "老四川", "Sakanaya", "十全"]
+        };
+
+        window.onload = function() {
+            document.getElementById('low-price-options').value = presetRestaurants.low.join(', ');
+            document.getElementById('high-price-options').value = presetRestaurants.high.join(', ');
+        };
+
+        function randomFood() {
+            let selectedFoods = [];
+
+            if (document.getElementById('low-price').checked) {
+                const lowPriceOptions = document.getElementById('low-price-options').value.split(',');
+                selectedFoods = selectedFoods.concat(lowPriceOptions.map(food => food.trim()).filter(food => food));
+            }
+
+            if (document.getElementById('high-price').checked) {
+                const highPriceOptions = document.getElementById('high-price-options').value.split(',');
+                selectedFoods = selectedFoods.concat(highPriceOptions.map(food => food.trim()).filter(food => food));
+            }
+
+            if (selectedFoods.length > 0) {
+                const randomIndex = Math.floor(Math.random() * selectedFoods.length);
+                document.getElementById('result').innerText = selectedFoods[randomIndex];
+            } else {
+                document.getElementById('result').innerText = "No restaurant available...";
+            }
+        }
+
+        function clearResult() {
+            document.getElementById('result').innerText = "Where are we going?";
+        }
+    </script>
+</body>
+</html>
