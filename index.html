@@ -135,12 +135,11 @@
             if (selectedFoods.length > 0) {
                 const randomIndex = Math.floor(Math.random() * selectedFoods.length);
                 document.getElementById('result').innerText = selectedFoods[randomIndex];
+                randomCount++;
+			    displayRandomCount();
             } else {
                 document.getElementById('result').innerText = "No restaurant available...";
             }
-			
-			randomCount++;
-			displayRandomCount();
         }
 
         function clearResult() {
