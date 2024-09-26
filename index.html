@@ -127,6 +127,7 @@
 
             if (document.getElementById('high-price').checked) {
                 const highPriceOptions = document.getElementById('high-price-options').value.split(',');
+				selectedFoods = selectedFoods.concat(highPriceOptions.map(food => food.trim()).filter(food => food));
             }
 			
 			selectedFoods = [...new Set(selectedFoods)];
