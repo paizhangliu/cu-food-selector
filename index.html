@@ -22,16 +22,34 @@
         }
         .result {
             margin-top: 20px;
-            font-size: 1.2em;
+            font-size: 1.6em;
             color: green;
         }
         button {
             margin-right: 10px;
         }
+		.counter {
+            font-size: 0.9em;
+            color: #555;
+        }
+		.github-icon {
+            width: 24px;
+            height: 24px;
+        }
+		.footer {
+            display: flex;
+            align-items: center;
+            margin-top: 30px;
+            font-size: 0.9em;
+            color: #555;
+        }
+        .footer a {
+            margin-right: 10px;
+        }
     </style>
 </head>
 <body>
-    <h1>C-U Food Selector</h1>
+	<h1>C-U Food Selector</h1>
     <div class="input-section">
         <label>
             <input type="checkbox" id="low-price" checked> Diner
@@ -48,18 +66,40 @@
 
     <button onclick="randomFood()">Go</button>
     <button onclick="clearResult()">Clear</button>
+	<span class="counter" id="random-count"></span>
 
     <div class="result" id="result">Where are we going?</div>
+	
+	<div class="footer">
+        <a href="https://github.com/paizhangpi/cu-food-selector" target="_blank">
+            <img class="github-icon" src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" alt="GitHub">
+        </a>
+        <div id="last-updated"></div>
+    </div>
 
     <script>
+		let randomCount = 0;
+		
         const presetRestaurants = {
 			low: ["San Maru", "Farrens", "DQ", "Taco Bell", "Raising Cane's", "Sticky Rice", "Mid Summer Lounge (蒲月巷)", "C-U La La Noodle (伊面园)", "EVO", "GG Bowl", "OOZU", "Ten Second Rice Noodle (十秒米线)", "Spoon House", "Yogi", "Szechuan Taste", "Susuru", "Cravings (万家香)"],
             high: ["Texas Roadhouse", "Blackdog", "Northern Cuisine (北味轩)", "Lao Sze Chuan (老四川)", "Sakanaya", "Shiquan Wonton (十全)"]
         };
 
         window.onload = function() {
+			displayRandomCount();
+			
             document.getElementById('low-price-options').value = presetRestaurants.low.join(', ');
             document.getElementById('high-price-options').value = presetRestaurants.high.join(', ');
+			
+			fetch('https://api.github.com/repos/paizhangpi/cu-food-selector')
+                .then(response => response.json())
+                .then(data => {
+                    const lastUpdated = new Date(data.updated_at).toLocaleString();
+                    document.getElementById('last-updated').innerText = 'Last updated: ' + lastUpdated;
+                })
+                .catch(error => {
+                    document.getElementById('last-updated').innerText = '';
+                });
         };
 
         function randomFood() {
@@ -81,11 +121,26 @@
             } else {
                 document.getElementById('result').innerText = "No restaurant available...";
             }
+			
+			randomCount++;
+			displayRandomCount();
         }
 
         function clearResult() {
             document.getElementById('result').innerText = "Where are we going?";
+			randomCount = 0;
+			displayRandomCount();
         }
+		
+		function displayRandomCount() {
+			if (randomCount == 0) {
+				document.getElementById('random-count').innerText = ``;
+			} else if (randomCount == 1) {
+				document.getElementById('random-count').innerText = `Picked ${randomCount} time`;
+			} else {
+				document.getElementById('random-count').innerText = `Picked ${randomCount} times`;
+			}
+		}
     </script>
 </body>
 </html>
