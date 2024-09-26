@@ -50,16 +50,24 @@
 </head>
 <body>
 	<h1>C-U Food Selector</h1>
-    <div class="input-section">
+	
+	<div class="input-section">
         <label>
-            <input type="checkbox" id="low-price" checked> Diner
+            <input type="checkbox" id="low-price"> Fast Food
         </label>
         <textarea id="low-price-options" placeholder="Please put restaurants here, separated by comma"></textarea>
+    </div>
+	
+    <div class="input-section">
+        <label>
+            <input type="checkbox" id="mid-price" checked> Casual Dining
+        </label>
+        <textarea id="mid-price-options" placeholder="Please put restaurants here, separated by comma"></textarea>
     </div>
 
     <div class="input-section">
         <label>
-            <input type="checkbox" id="high-price" checked> Fine dining
+            <input type="checkbox" id="high-price"> Fine Dining
         </label>
         <textarea id="high-price-options" placeholder="Please put restaurants here, separated by comma"></textarea>
     </div>
@@ -81,7 +89,8 @@
 		let randomCount = 0;
 		
         const presetRestaurants = {
-			low: ["San Maru", "Farrens", "DQ", "Taco Bell", "Raising Cane's", "Sticky Rice", "Mid Summer Lounge (蒲月巷)", "C-U La La Noodle (伊面园)", "EVO", "GG Bowl", "OOZU", "Ten Second Rice Noodle (十秒米线)", "Spoon House", "Yogi", "Szechuan Taste", "Susuru", "Cravings (万家香)"],
+			low: ["DQ", "Taco Bell", "Raising Cane's", "McDonald's", "Hot Wok Express (重庆山庄)", "EVO"],
+			mid: ["San Maru", "Farrens", "Sticky Rice", "Mid Summer Lounge (蒲月巷)", "C-U La La Noodle (伊面园)", "EVO", "GG Bowl", "OOZU", "Ten Second Rice Noodle (十秒米线)", "Spoon House", "Yogi", "Szechuan Taste", "Susuru", "Cravings (万家香)"],
             high: ["Texas Roadhouse", "Blackdog", "Northern Cuisine (北味轩)", "Lao Sze Chuan (老四川)", "Sakanaya", "Shiquan Wonton (十全)"]
         };
 
@@ -89,6 +98,7 @@
 			displayRandomCount();
 			
             document.getElementById('low-price-options').value = presetRestaurants.low.join(', ');
+			document.getElementById('mid-price-options').value = presetRestaurants.mid.join(', ');
             document.getElementById('high-price-options').value = presetRestaurants.high.join(', ');
 			
 			fetch('https://api.github.com/repos/paizhangpi/cu-food-selector')
@@ -109,11 +119,17 @@
                 const lowPriceOptions = document.getElementById('low-price-options').value.split(',');
                 selectedFoods = selectedFoods.concat(lowPriceOptions.map(food => food.trim()).filter(food => food));
             }
+			
+			if (document.getElementById('mid-price').checked) {
+                const midPriceOptions = document.getElementById('mid-price-options').value.split(',');
+                selectedFoods = selectedFoods.concat(midPriceOptions.map(food => food.trim()).filter(food => food));
+            }
 
             if (document.getElementById('high-price').checked) {
                 const highPriceOptions = document.getElementById('high-price-options').value.split(',');
-                selectedFoods = selectedFoods.concat(highPriceOptions.map(food => food.trim()).filter(food => food));
             }
+			
+			selectedFoods = [...new Set(selectedFoods)];
 
             if (selectedFoods.length > 0) {
                 const randomIndex = Math.floor(Math.random() * selectedFoods.length);
